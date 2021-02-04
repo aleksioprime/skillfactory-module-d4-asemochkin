@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список книг</title>
+    <style>
+        .wrapper {
+            width: 800px;
+            margin: 10px auto;
+        }
+        .btn {
+            width: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+    <h1>Добро пожаловать в {{ title }}</h1>
+    <p>Тут собрано {{ books|length }} книг из моей личной коллекции</p> 
+    <table border="1">
+        <tr>
+            <th>№</th>
+            <th>Название</th>
+            <th>ISBN</th>
+            <th>Описание</th>
+            <th>Год издания</th>
+            <th>Автор</th>
+            <th>Издательство</th>
+            <th>Кол-во</th>
+        </tr>
+        {% for book in books %}
+        <tr>
+            <td>{{ forloop.counter}}</td>
+            <td>{{ book.title}}</td>
+            <td>{{ book.ISBN}}</td>
+            <td>{{ book.description}}</td>
+            <td>{{ book.year_release}}</td>
+            <td>{{ book.author.full_name}}</td>
+            <td>{{ book.publisher.name}}</td>
+            <td>{{ book.copy_count }}</td>
+            <td>
+                <form action="/index/book_increment/" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name='id' value="{{book.id}}">
+                    <input class="btn" type="submit" value="+">
+                </form>
+                <form action="/index/book_decrement/" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name='id' value="{{book.id}}">
+                    <input class="btn" type="submit" value="-">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>
